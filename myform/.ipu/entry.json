@@ -1,0 +1,13 @@
+{
+    "main": {
+        "input": {
+            "js": "src/main.js",
+            "css": "src/main.styl",
+            "html": "src/index.html"
+        },
+        "vendor": {
+            "js": "base",
+            "css": "base"
+        }
+    }
+}

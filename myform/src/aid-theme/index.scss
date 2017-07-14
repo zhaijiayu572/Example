@@ -1,0 +1,10 @@
+// 客户端主题定制的sass实现
+// 请注意！ 请不要修改此文件，否则可能导致样式出错
+
+@import "./variable/index.scss";
+
+
+//AI Design
+@import "~aid-elements/src/fonts/_scss/fonts-base";
+@import "~aid-elements/src/aid/index";
+
