@@ -1,3 +1,4 @@
+<!--一个筛选面板组件-->
 <template>
   <transition name="slide-right">
     <div class="filter-panel" v-show="filterToggle">
