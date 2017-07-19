@@ -8,7 +8,7 @@
         <div class="catalog-fun">
           <span class="catalog-now">分类标题一</span>
           <!--展示更多的分类功能的按钮-->
-          <span class="catalog-show-more">
+          <span class="catalog-show-more" @click="isActive.catalogBtn?closeCatalog():showCatalog()">
             <t-icon type="arrow-down-drop" class="ml-4" size="30" color="#354052"></t-icon>
           </span>
           <div class="slide"></div>
@@ -32,11 +32,13 @@
             </span>
         </div>
         <!--列功能按钮-->
-        <div class="side-btn col-btn" :class="{active:isActive.colBtn}">
+        <div class="side-btn col-btn" :class="{active:isActive.colBtn}" @click="isActive.colBtn?closeColList():showColList()">
           <span>
             <t-icon type="view-column" size="24" ></t-icon>
           </span>
-
+        </div>
+        <div class="col-list-container">
+          <col-list :col-btn="isActive.colBtn"></col-list>
         </div>
         <!--弹出侧边按钮-->
         <div class="side-btn filter-btn" @click="isActive.filterBtn?closeFilter():showFilter();" :class="{active:isActive.filterBtn}">
@@ -57,7 +59,7 @@
         <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter"></filter-panel>
       </div>
       <div class="page-panel">
-        <t-pager :total="10" :page-size='10' :current="1" @on-change="changePage" simple="true"></t-pager>
+        <t-pager :total="10" :page-size='10' :current="1" @on-change="changePage" ></t-pager>
       </div>
     </div>
   </div>
@@ -70,11 +72,13 @@
   import filterPanel from  './filter-panel.vue'
   import formIcon from './form-icon.vue'
   import catalog from './catalog.vue'
+  import colList from './col-list.vue'
   export default {
     name: 'app',
     components:{
       tHead:head,
       catalog:catalog,
+      colList:colList,
       filterPanel:filterPanel,
       formIcon:formIcon              //显示等级的图标组件
     },
@@ -262,6 +266,20 @@
       }
     },
     methods:{
+        //控制colList的开启和关闭
+        closeColList(){
+            this.isActive.colBtn = false;
+        },
+        showColList(){
+            this.isActive.colBtn = true;
+        },
+        //控制catalogList的开启和关闭
+        closeCatalog(){
+            this.isActive.catalogBtn = false;
+        },
+        showCatalog(){
+            this.isActive.catalogBtn = true;
+        },
         closeFilter(){
             this.isActive.filterBtn = false;         //控制筛选框的关闭
         },
@@ -394,7 +412,6 @@
   #container .side-btn .tip-num{
     width: 20px;
     height: 20px;
-
     position: absolute;
     background: #FF6D57;
     border-radius: 10px;
@@ -408,6 +425,12 @@
   #container .side-btn.active{
     background: #96B0B2;
 
+  }
+  #container .col-list-container{
+    position: absolute;
+    right: 77px;
+    top:58px;
+    z-index: 10;
   }
   .table-container{
     position: relative;

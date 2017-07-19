@@ -1,14 +1,14 @@
 <template>
-  <transition name="slide-right">
+  <transition name="slide-up">
     <ul class="catalog-list" v-show="catalogToggle">
       <li v-for="x in catalogList">
         <div class="catalog-title">分类名称</div>
         <ul class="sub-catalog-list">
-          <li v-if="!(x instanceof Array)">              <!--判断x的种类来决定渲染方式-->
+          <li v-if="!(x instanceof Array)" @click="changeChecked(x)">              <!--判断x的种类来决定渲染方式-->
             <span class="sub-catalog">{{ x.catalog }}</span>
             <t-icon type="check" size="18" color="#7D8FFF" v-show="x.checked"></t-icon>
           </li>
-          <li v-else="" v-for="y in x">
+          <li v-else="" v-for="y in x" @click="changeChecked(y)">
             <span class="sub-catalog">{{ y.catalog }}</span>
             <t-icon type="check" size="18" color="#7D8FFF" v-show="y.checked"></t-icon>
           </li>
@@ -24,7 +24,7 @@
 <script>
   export default{
       created(){
-          this.isArr();
+
       },
       props:['catalogToggle'],
       data(){
@@ -48,7 +48,21 @@
           }
       },
       methods:{
+          clearChecked(arr){                        //清除所有选中项
+            for(let i=0;i<arr.length;i++){
+              if(arr[i] instanceof Array){
+                  this.clearChecked(arr[i]);        //递归修改数组里面的对象
+              }else{
+                arr[i].checked = false;
+              }
 
+            }
+            return false;
+          },
+          changeChecked(obj){
+              this.clearChecked(this.catalogList);
+              obj.checked = true;
+          }
       }
   }
 </script>
