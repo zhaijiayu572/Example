@@ -1,7 +1,7 @@
 export default [{
     name: 'Index',
     path: '/',
-    component: require('./module/index/app.vue')
+    component: require('./module/index/index.vue')
 }, {
     name: '客户信息',
     path: '/client',
