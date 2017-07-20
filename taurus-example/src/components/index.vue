@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="table-container" style="width: 100%">
-      <t-table border :columns="columns" :data="formData" size="lg">
+      <t-table border :columns="columns" :data="showData" size="lg">
 
       </t-table>
       <!--筛选面板-->
@@ -59,7 +59,7 @@
         <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter"></filter-panel>
       </div>
       <div class="page-panel">
-        <t-pager :total="10" :page-size='10' :current="1" @on-change="changePage" ></t-pager>
+        <t-pager :total="totalData.length" :page-size="perPage" :current="1" @on-change="changePage" ></t-pager>
       </div>
     </div>
   </div>
@@ -74,13 +74,17 @@
   import catalog from './catalog.vue'
   import colList from './col-list.vue'
   export default {
-    name: 'app',
+
     components:{
       tHead:head,
       catalog:catalog,
       colList:colList,
       filterPanel:filterPanel,
       formIcon:formIcon              //显示等级的图标组件
+    },
+    created(){
+        this.tableInit();
+
     },
     mounted(){                   //钩子函数处理表格宽度问题
       let formWrapper = document.querySelectorAll('.table-wrapper')[0];
@@ -98,7 +102,7 @@
         showData:[],                //当前显示的数据
         totalData:[],               //采用假分页，总数据
         pageNum:0,                 //总页数
-        perPage:10,                //每一页的数据量
+        perPage:1,                //每一页的数据量
         columns: [
           {                                 //第一节
             type:'selection',                 // value:[true,false]代表不同的星星图标
@@ -303,11 +307,20 @@
             }
 
         },
+        //表格的初始化
+        tableInit(){
+            this.loadData();
+            this.pageNum = Math.ceil(this.totalData.length/this.perPage);
+            this.changePage(1);
+        },
+        //加载表格数据
         loadData(){              //获取数据
+          this.totalData = this.formData;
 
         },
+        //改变页码，更换数据
         changePage(pageNum){               //当页面改变时更换数据
-            let start = pageNum*this.perPage;
+            let start = (pageNum-1)*this.perPage;
             let end  = start + this.perPage;
             if(end > this.totalData){
                 end = null;

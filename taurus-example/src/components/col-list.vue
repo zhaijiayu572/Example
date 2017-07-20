@@ -184,6 +184,7 @@
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.07);
     border-radius: 4px;
     cursor: move;
+    margin: 2px 0;
   }
   .col-list .col-list-title{
     font-family: PingFangSC-Semibold;
