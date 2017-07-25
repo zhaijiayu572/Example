@@ -14,7 +14,7 @@ const router = new VueRouter({
     mode: 'history',
     routes
 })
-
+aaaa
 router.beforeEach((to, from, next) => {
     window.scrollTo(0, 0)
     next()
