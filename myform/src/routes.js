@@ -11,4 +11,9 @@ export default [{
     component: {
         template: '<div>not found</div>'
     }
-}]
+},
+    {
+        path: '/test',
+        component: require('./test/test.vue')
+    }
+]

@@ -26,7 +26,6 @@
           <!--时间表-->
           <li style="margin-right: 22px">
               <t-icon type="timelapse" class="" size="17" color="#8FA4AF"></t-icon>
-
           </li>
           <!--个人资料功能-->
           <li style="margin-right: 15px">

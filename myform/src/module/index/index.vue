@@ -56,7 +56,7 @@
       </t-table>
       <!--筛选面板-->
       <div class="filter-container"  style="height: 788px">
-        <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter"></filter-panel>
+        <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter" @filter="filter"></filter-panel>
       </div>
       <div class="page-panel">
         <t-pager :total="totalData.length" :page-size="perPage" :current="1" @on-change="changePage" ></t-pager>
@@ -67,268 +67,297 @@
 
 <script>
 
-  import head from "./head.vue"
-  import test from "./test.vue"
-  import filterPanel from  './filter-panel.vue'
-  import formIcon from './form-icon.vue'
-  import catalog from './catalog.vue'
-  import colList from './col-list.vue'
-  export default {
+    import head from "./head.vue"
+    import test from "./test.vue"
+    import filterPanel from  './filter-panel.vue'
+    import formIcon from './form-icon.vue'
+    import catalog from './catalog.vue'
+    import colList from './col-list.vue'
+    export default {
 
-    components:{
-      tHead:head,
-      catalog:catalog,
-      colList:colList,
-      filterPanel:filterPanel,
-      formIcon:formIcon              //显示等级的图标组件
-    },
-    created(){
-        this.tableInit();
-
-    },
-    mounted(){                   //钩子函数处理表格宽度问题
-      let formWrapper = document.querySelectorAll('.table-wrapper')[0];
-      formWrapper.style.width = "100%";
-
-    },
-    data:function () {
-      return{
-        isActive:{
-          colBtn:true,           //控制列功能按钮
-          filterBtn:true,           //控制筛选功能按钮
-          catalogBtn:true         //控制分类按钮
+        components:{
+            tHead:head,
+            catalog:catalog,
+            colList:colList,
+            filterPanel:filterPanel,
+            formIcon:formIcon              //显示等级的图标组件
         },
-        filterNum:1,                //筛选出的结果的数量
-        showData:[],                //当前显示的数据
-        totalData:[],               //采用假分页，总数据
-        pageNum:0,                 //总页数
-        perPage:1,                //每一页的数据量
-        columns: [
-          {                                 //第一节
-            type:'selection',                 // value:[true,false]代表不同的星星图标
-            align:'center',
-            width:'108',
-            render:(h,params) => {                  //渲染出星星的图标
-              return h('TIcon',{
-                props: {
-                  type: (params.selected&&params.selected!='false')?'star':'star-outline',      //判断星的形状
-                  size:'20',
-                  color:'#FFBF00'
-                }
-              })
-            }
-          },
-          {
-            width:'265',
-            title: '姓名',
-            key: 'name'
-          },
-          {
-            title: '年龄',
-            key: 'age',
-            width:'251'
-          },
-          {
-            title: '等级',                   //value:['high','medium','low']    代表不同的等级
-            key: 'level',
-            width:'152',
-            render:(h,params) => {            //显示等级的分组
-              return h(formIcon,{
-                props: {
-                  "size":params.level,
-                }
-              })
-            }
-          },
-          {
-          //            value:{
-          //                content:'string',             工单的内容
-          //                importance:1                  (1-5)number类型代表不同的重要程度的图标
-          //            }
-            title:'工单类型',
-            key:'type',
-            render:(h,params) => {
-                var _this = this;         //记录指向vue对象的this
-                return h('div',[
-                    h('TIcon',{
-                        props:{
-                            type:'circle-outline',
-                            size:'12',
-                            color:_this.chooseFormTypeColor(params.type.importance)
-                        },
-                        style:{
-                            verticalAlign:'middle'
+        created(){
+            this.tableInit();
+
+        },
+        mounted(){                   //钩子函数处理表格宽度问题
+            let formWrapper = document.querySelectorAll('.table-wrapper')[0];
+            formWrapper.style.width = "100%";
+
+        },
+        data:function () {
+            return{
+                isActive:{
+                    colBtn:true,           //控制列功能按钮
+                    filterBtn:true,           //控制筛选功能按钮
+                    catalogBtn:true         //控制分类按钮
+                },
+                filterNum:1,                //筛选出的结果的数量
+                showData:[],                //当前显示的数据
+                totalData:[],               //采用假分页，总数据
+                pageNum:0,                 //总页数
+                perPage:1,                //每一页的数据量
+                columns: [
+                    {                                 //第一节
+                        type:'selection',                 // value:[true,false]代表不同的星星图标
+                        align:'center',
+                        width:'108',
+                        render:(h,params) => {                  //渲染出星星的图标
+                            return h('TIcon',{
+                                props: {
+                                    type: (params.selected&&params.selected!='false')?'star':'star-outline',      //判断星的形状
+                                    size:'20',
+                                    color:'#FFBF00'
+                                }
+                            })
                         }
-                    }),
-                    h('span',{
-                        style:{
-                            marginLeft:'12px',
-                            verticalAlign:'middle'
-                        },
-                        domProps:{
-                            innerHTML:params.type.content
+                    },
+                    {
+                        width:'265',
+                        title: '姓名',
+                        key: 'name'
+                    },
+                    {
+                        title: '年龄',
+                        key: 'age',
+                        width:'251'
+                    },
+                    {
+                        title: '等级',                   //value:['high','medium','low']    代表不同的等级
+                        key: 'level',
+                        width:'152',
+                        render:(h,params) => {            //显示等级的分组
+                            return h(formIcon,{
+                                props: {
+                                    "size":params.level,
+                                }
+                            })
                         }
-                    })
-                ])
-            }
-          },
-          {
-             /*
-             * value:{
-             *     username:String       //用户的名称
-             *     address:String        //用户的地址
-             * }
-             * */
-              title:'创建者',
-              key:'creator',
-              render:(h,params) =>{
-                  return h('div',[
-                      h('div',{
-                          style:{
-                            fontSize: "14px",
-                            color: "#2B3F5B"
-                          },
-                          domProps:{
-                              innerHTML:params.creator.username
-                          }
-                      }),
-                      h('div',{
-                          style:{
-                            fontSize: "12px",
-                            color: "#7B98A7"
-                          },
-                          domProps:{
-                              innerHTML:params.creator.address
-                          }
-                      })
+                    },
+                    {
+                        //            value:{
+                        //                content:'string',             工单的内容
+                        //                importance:1                  (1-5)number类型代表不同的重要程度的图标
+                        //            }
+                        title:'工单类型',
+                        key:'type',
+                        render:(h,params) => {
+                            var _this = this;         //记录指向vue对象的this
+                            return h('div',[
+                                h('TIcon',{
+                                    props:{
+                                        type:'circle-outline',
+                                        size:'12',
+                                        color:_this.chooseFormTypeColor(params.type.importance)
+                                    },
+                                    style:{
+                                        verticalAlign:'middle'
+                                    }
+                                }),
+                                h('span',{
+                                    style:{
+                                        marginLeft:'12px',
+                                        verticalAlign:'middle'
+                                    },
+                                    domProps:{
+                                        innerHTML:params.type.content
+                                    }
+                                })
+                            ])
+                        }
+                    },
+                    {
+                      /*
+                       * value:{
+                       *     username:String       //用户的名称
+                       *     address:String        //用户的地址
+                       * }
+                       * */
+                        title:'创建者',
+                        key:'creator',
+                        render:(h,params) =>{
+                            return h('div',[
+                                h('div',{
+                                    style:{
+                                        fontSize: "14px",
+                                        color: "#2B3F5B"
+                                    },
+                                    domProps:{
+                                        innerHTML:params.creator.username
+                                    }
+                                }),
+                                h('div',{
+                                    style:{
+                                        fontSize: "12px",
+                                        color: "#7B98A7"
+                                    },
+                                    domProps:{
+                                        innerHTML:params.creator.address
+                                    }
+                                })
 
-                  ])
-              }
-          }
-        ],
-        formData: [            //暂时的假数据
-          {
-            selected:false,
-            name: '王小明',
-            age: 18,
-            level:'high',
-            type:{
-                content:'hello',
-                importance:1
+                            ])
+                        }
+                    }
+                ],
+                formData: [            //暂时的假数据
+                    {
+                        selected:false,
+                        name: '王小明',
+                        age: 18,
+                        level:'high',
+                        type:{
+                            content:'hello',
+                            importance:1
+                        },
+                        creator:{
+                            username:'nana',
+                            address:"湖南长沙"
+                        }
+                    },
+                    {
+                        selected:'false',
+                        name: '张小刚',
+                        age: 25,
+                        level:'low',
+                        type:{
+                            content:'hello',
+                            importance:2
+                        },
+                        creator:{
+                            username:'nana',
+                            address:"湖南长沙"
+                        }
+                    },
+                    {
+                        selected:true,
+                        name: '李小红',
+                        age: 30,
+                        level:'medium',
+
+                        type:{
+                            content:'hello',
+                            importance:3
+                        },
+                        creator:{
+                            username:'nana',
+                            address: '上海市浦东新区世纪大道',
+                        }
+                    },
+                    {
+                        selected:false,
+                        name: '周小伟',
+                        age: 26,
+                        level:'low',
+
+                        type:{
+                            content:'hello',
+                            importance:4
+                        },
+                        creator:{
+                            username:'nana',
+                            address: '深圳市南山区深南大道',
+                        }
+                    }
+                ],
+                filterData:[]
+            }
+        },
+        methods:{
+            //控制colList的开启和关闭
+            closeColList(){
+                this.isActive.colBtn = false;
             },
-            creator:{
-                username:'nana',
-                address:"湖南长沙"
-            }
-          },
-          {
-            selected:'false',
-            name: '张小刚',
-            age: 25,
-            level:'low',
-            type:{
-              content:'hello',
-              importance:2
+            showColList(){
+                this.isActive.colBtn = true;
             },
-            creator:{
-              username:'nana',
-              address:"湖南长沙"
-            }
-          },
-          {
-            selected:true,
-            name: '李小红',
-            age: 30,
-            level:'medium',
-
-            type:{
-              content:'hello',
-              importance:3
+            //控制catalogList的开启和关闭
+            closeCatalog(){
+                this.isActive.catalogBtn = false;
             },
-            creator:{
-              username:'nana',
-              address: '上海市浦东新区世纪大道',
-            }
-          },
-          {
-            selected:false,
-            name: '周小伟',
-            age: 26,
-            level:'low',
-
-            type:{
-              content:'hello',
-              importance:4
+            showCatalog(){
+                this.isActive.catalogBtn = true;
             },
-            creator:{
-              username:'nana',
-              address: '深圳市南山区深南大道',
-            }
-          }
-        ],
+            closeFilter(){
+                this.isActive.filterBtn = false;         //控制筛选框的关闭
+            },
+            showFilter(){
+                this.isActive.filterBtn = true;            //控制筛选框的开启
+            },
+            chooseFormTypeColor(type){             //选择工单图标种类的颜色
+                switch (type){
+                    case 1:
+                        return "#AF8BEE";
+                    case 2:
+                        return "#FFBF00";
+                    case 3:
+                        return "#038CD6";
+                    case 4:
+                        return "#FF847F";
+                    case 5:
+                        return "#21BB54";
+                    default:
+                        return false;
+                }
 
-      }
-    },
-    methods:{
-        //控制colList的开启和关闭
-        closeColList(){
-            this.isActive.colBtn = false;
-        },
-        showColList(){
-            this.isActive.colBtn = true;
-        },
-        //控制catalogList的开启和关闭
-        closeCatalog(){
-            this.isActive.catalogBtn = false;
-        },
-        showCatalog(){
-            this.isActive.catalogBtn = true;
-        },
-        closeFilter(){
-            this.isActive.filterBtn = false;         //控制筛选框的关闭
-        },
-        showFilter(){
-            this.isActive.filterBtn = true;            //控制筛选框的开启
-        },
-        chooseFormTypeColor(type){             //选择工单图标种类的颜色
-            switch (type){
-              case 1:
-                  return "#AF8BEE";
-              case 2:
-                  return "#FFBF00";
-              case 3:
-                  return "#038CD6";
-              case 4:
-                  return "#FF847F";
-              case 5:
-                  return "#21BB54";
-              default:
-                  return false;
-            }
+            },
+            //表格的初始化
+            tableInit(){
+                this.loadData();
+                this.pageNum = Math.ceil(this.totalData.length/this.perPage);
+                this.changePage(1);
+            },
+            //加载表格数据
+            loadData(){              //获取数据
+                this.totalData = this.formData;
 
-        },
-        //表格的初始化
-        tableInit(){
-            this.loadData();
-            this.pageNum = Math.ceil(this.totalData.length/this.perPage);
-            this.changePage(1);
-        },
-        //加载表格数据
-        loadData(){              //获取数据
-          this.totalData = this.formData;
-
-        },
-        //改变页码，更换数据
-        changePage(pageNum){               //当页面改变时更换数据
-            let start = (pageNum-1)*this.perPage;
-            let end  = start + this.perPage;
-            if(end > this.totalData){
-                end = null;
+            },
+            //改变页码，更换数据
+            changePage(pageNum){               //当页面改变时更换数据
+                let start = (pageNum-1)*this.perPage;
+                let end  = start + this.perPage;
+                if(end > this.totalData){
+                    end = null;
+                }
+                this.showData = this.totalData.slice(start,end);
+            },
+            filterAge(data,option){
+                let age = parseInt(data.age);
+                switch (option.select1) {
+                    case "1":
+                        if(age >= 0 && age < 10){
+                            this.filterData.push(data);
+                        }
+                        break;
+                    case "2":
+                        if(age >= 10 && age < 20){
+                            this.filterData.push(data);
+                        }
+                        break;
+                    case "3":
+                        if(age >= 20){
+                            this.filterData.push(data);
+                        }
+                    default:
+                        this.filterData.push(data);
+                }
+            },
+            filter(option){
+                for(let i=0;i<this.totalData.length;i++){
+                    this.filterAge(this.totalData[i],option);
+                    this.totalData = this.filterData;
+                    this.changePage(1);
+                    this.filterNum = this.filterData.length;
+                }
             }
-            this.showData = this.totalData.slice(start,end);
         }
     }
-  }
 </script>
 
 <style>

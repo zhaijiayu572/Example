@@ -56,7 +56,7 @@
       </t-table>
       <!--筛选面板-->
       <div class="filter-container"  style="height: 788px">
-        <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter"></filter-panel>
+        <filter-panel :filter-toggle="isActive.filterBtn"  @closeFilter="closeFilter" @filter="filter"></filter-panel>
       </div>
       <div class="page-panel">
         <t-pager :total="totalData.length" :page-size="perPage" :current="1" @on-change="changePage" ></t-pager>
@@ -266,7 +266,7 @@
             }
           }
         ],
-
+        filterData:[]
       }
     },
     methods:{
@@ -326,6 +326,34 @@
                 end = null;
             }
             this.showData = this.totalData.slice(start,end);
+        },
+        filterAge(data,option){
+            let age = data.age;
+            switch (option.select1) {
+                case "1":
+                    if(age >= 0 && age < 10){
+                      this.filterData.push(data);
+                    }
+                    break;
+                case "2":
+                    if(age >= 10 && age < 20){
+                        this.filterData.push(data);
+                    }
+                    break;
+                case "3":
+                    if(age >= 20){
+                        this.filterData.push(data);
+                    }
+                default:
+                    this.filterData.push(data);
+            }
+        },
+        filter(option){
+            for(let i=0;i<this.totalData.length;i++){
+                this.filterAge(this.totalData);
+                this.totalData = this.filterData;
+                this.change(1);
+            }
         }
     }
   }

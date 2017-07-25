@@ -5,21 +5,21 @@
       <!--顶部控制栏-->
       <div class="top">
         <!--关闭按钮-->
-          <span class="close-btn" @click="close">
+        <span class="close-btn" @click="close">
             <t-icon type="arrow-right" size="24" color="#7B98A7"></t-icon>
           </span>
-          <span class="panel-title">高级筛选</span>
+        <span class="panel-title">高级筛选</span>
         <!--清空按钮-->
-          <button @click="resetForm('myForm')" class="reset-btn">清空</button>
+        <button @click="resetForm('myForm')" class="reset-btn">清空</button>
       </div>
       <div class="form-container">
         <t-form ref="myForm">
           <!--下拉菜单组-->
           <t-form-item label="选择器" >
             <t-select placeholder="请选择" v-model="filterObj.select1">
-              <t-option value="beijing">北京市</t-option>
-              <t-option value="shanghai">上海市</t-option>
-              <t-option value="shenzhen">深圳市</t-option>
+              <t-option value="1">0-10</t-option>
+              <t-option value="2">10-20</t-option>
+              <t-option value="3">20-30</t-option>
             </t-select>
           </t-form-item>
           <t-form-item label="选择器" >
@@ -46,23 +46,23 @@
           <!--时间表单组-->
 
           <t-form-item >
-              <div class="row">
-                <div class="col-6">
-                  <t-form-item label="我是时间">
-                    <t-form-item prop="rangeDate" >
-                      <t-date-picker v-model="filterObj.time1" type="date " placeholder="请选择日期时间"></t-date-picker>
-                    </t-form-item>
+            <div class="row">
+              <div class="col-6">
+                <t-form-item label="我是时间">
+                  <t-form-item prop="rangeDate" >
+                    <t-date-picker v-model="filterObj.time1" type="date " placeholder="请选择日期时间"></t-date-picker>
                   </t-form-item>
+                </t-form-item>
 
-                </div>
-                <div class="col-6">
-                  <t-form-item label="我是文字label">
-                    <t-form-item prop="singleYearVal" >
-                      <t-date-picker v-model="filterObj.time2" type="year" placeholder="请选择年份"></t-date-picker>
-                    </t-form-item>
-                  </t-form-item>
-                </div>
               </div>
+              <div class="col-6">
+                <t-form-item label="我是文字label">
+                  <t-form-item prop="singleYearVal" >
+                    <t-date-picker v-model="filterObj.time2" type="year" placeholder="请选择年份"></t-date-picker>
+                  </t-form-item>
+                </t-form-item>
+              </div>
+            </div>
           </t-form-item>
 
 
@@ -71,50 +71,54 @@
       <!--底部按钮组-->
       <div class="bottom-btn-container">
         <button class="bottom-btn left-btn">另存为</button>
-        <button class="bottom-btn right-btn">保存筛选</button>
+        <button class="bottom-btn right-btn" @click="filter">保存筛选</button>
       </div>
     </div>
   </transition>
 </template>
 <script>
-  export default{
-    mounted:function () {
-      let select = document.querySelectorAll('.form .select');
-      for(let i=0;i<select.length;i++){
-          select[i].style.width = "100%";
-      }
-      let formGroup = document.querySelectorAll('.form-group');
-      for(let i=0;i<formGroup.length;i++){
-          formGroup[i].style.marginBottom = '21px';
-      }
-
-    },
-    data(){
-        return{
-            filterObj:{
-                select1:'',
-                select2:'',
-                select3:'',
-                select4:'',
-                time1:'',
-                time2:'',
+    export default{
+        mounted:function () {
+            let select = document.querySelectorAll('.form .select');
+            for(let i=0;i<select.length;i++){
+                select[i].style.width = "100%";
             }
-        }
-    },
-    props:['filterToggle'],
-    methods:{
-        close(){
-            this.$emit('closeFilter');
+            let formGroup = document.querySelectorAll('.form-group');
+            for(let i=0;i<formGroup.length;i++){
+                formGroup[i].style.marginBottom = '21px';
+            }
+
         },
-        resetForm(){
-            console.log(this.filterObj);
+        data(){
+            return{
+                filterObj:{
+                    select1:'',
+                    select2:'',
+                    select3:'',
+                    select4:'',
+                    time1:'',
+                    time2:'',
+                }
+            }
+        },
+        props:['filterToggle'],
+        methods:{
+            close(){
+                this.$emit('closeFilter');
+            },
+            resetForm(){
+                console.log(this.filterObj);
 //          this.$refs['myForm'].resetFields();
-            for(var name in this.filterObj){
-                this.filterObj[name] = '';
+                for(var name in this.filterObj){
+                    this.filterObj[name] = '';
+                }
+            },
+            filter(){
+                this.$emit('filter',[this.filterObj]);
+                this.close();
             }
         }
     }
-  }
 </script>
 <style>
   .filter-panel{

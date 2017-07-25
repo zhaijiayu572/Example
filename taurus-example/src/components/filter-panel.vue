@@ -17,9 +17,9 @@
           <!--下拉菜单组-->
           <t-form-item label="选择器" >
             <t-select placeholder="请选择" v-model="filterObj.select1">
-              <t-option value="beijing">北京市</t-option>
-              <t-option value="shanghai">上海市</t-option>
-              <t-option value="shenzhen">深圳市</t-option>
+              <t-option value="1">0-10</t-option>
+              <t-option value="2">10-20</t-option>
+              <t-option value="3">20-30</t-option>
             </t-select>
           </t-form-item>
           <t-form-item label="选择器" >
@@ -71,7 +71,7 @@
       <!--底部按钮组-->
       <div class="bottom-btn-container">
         <button class="bottom-btn left-btn">另存为</button>
-        <button class="bottom-btn right-btn">保存筛选</button>
+        <button class="bottom-btn right-btn" @click="filter">保存筛选</button>
       </div>
     </div>
   </transition>
@@ -112,6 +112,9 @@
             for(var name in this.filterObj){
                 this.filterObj[name] = '';
             }
+        },
+        filter(){
+            this.$emit('filter',this.filterObj);
         }
     }
   }
