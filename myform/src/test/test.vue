@@ -32,7 +32,7 @@
                 <t-button type="primary" size="sm">小的尺寸</t-button>
                 <br><br>
                 <t-button type="primary" shape="round" size="lg">大的尺寸</t-button>
-                <t-button type="primary" shape="round">默认尺寸</t-button>
+                <t-button type="primary" shape="circle">默认尺寸</t-button>
                 <t-button type="primary"  size="sm" block="true">小的尺寸</t-button>
                 <br><br><br><br><br>
                 <h6 class="mt-3 mb-2 text-gray">按钮组基础</h6>
@@ -87,7 +87,7 @@
 
         </transition>
     </div>
-    aaaa
+
 </template>
 <script>
     export default{
