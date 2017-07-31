@@ -9,6 +9,15 @@
     
     <t-avatar img-src="http://flatfull.com/themes/angulr/angular/img/a0.jpg"></t-avatar>
     <t-avatar :img-src="avatarImgSrc"></t-avatar>
+    
+    <t-avatar dot dot-state="success" text="HC" size="sm"></t-avatar>
+    
+    <t-avatar bg-state="success" text="HC"></t-avatar>
+    <t-avatar bg-state="warning" text="HC"></t-avatar>
+    <t-avatar bg-state="danger" text="HC"></t-avatar>
+    <t-avatar bg-state="info" text="HC"></t-avatar>
+    <t-avatar bg-state="primary" text="HC"></t-avatar>
+
 
   </div>
 </template>
@@ -16,11 +25,11 @@
 export default {
   data(){
       return{
-          avatarImgSrc:require('./')
+          avatarImgSrc:require('../asset/image/aid-logo.png')
       }
   },
   methods:{
-    
+
   }
 }
 </script>

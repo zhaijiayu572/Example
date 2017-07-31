@@ -47,5 +47,41 @@ export default [{
     {
         path: '/test/avatar',
         component: require('./test/test-avatar.vue')
+    },
+    {
+        path: '/test/tabs',
+        component: require('./test/test-tab.vue')
+    },
+    {
+        path: '/test/menu',
+        component: require('./test/test-menu.vue')
+    },
+    {
+        path: '/test/page',
+        component: require('./test/test-page.vue')
+    },
+    {
+        path: '/test/number',
+        component: require('./test/test-number.vue')
+    },
+    {
+        path: '/test/carousel',
+        component: require('./test/test-carousel.vue')
+    },
+    {
+        path: '/test/collapse',
+        component: require('./test/test-collapse.vue')
+    },
+    {
+        path: '/test/tree',
+        component: require('./test/test-tree.vue')
+    },
+    {
+        path: '/test/poptip',
+        component: require('./test/test-poptip.vue')
+    },
+    {
+        path: '/test/process',
+        component: require('./test/test-process.vue')
     }
 ]
