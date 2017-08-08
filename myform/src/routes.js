@@ -83,5 +83,9 @@ export default [{
     {
         path: '/test/process',
         component: require('./test/test-process.vue')
+    },
+    {
+        path: '/test/chart',
+        component: require('./test/test-chart.vue')
     }
 ]
